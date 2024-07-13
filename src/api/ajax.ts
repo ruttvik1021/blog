@@ -13,7 +13,7 @@ const getHeaders = (auth: boolean) => {
 };
 
 const axiosInstance = axios.create({
-  baseURL: "/",
+  baseURL: process.env.BASEURL,
   //   baseURL: "https://localhost:3000/",
 });
 
