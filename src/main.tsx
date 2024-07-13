@@ -3,15 +3,15 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
+import { Toaster } from "./components/ui/sonner.tsx";
 import "./index.css";
 import { routers } from "./router.tsx";
 import { AuthProvider } from "./wrappers/AuthContext.tsx";
-import { Toaster } from "./components/ui/sonner.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000,
+      staleTime: 1 * 60 * 1000,
     },
   },
 });

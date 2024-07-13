@@ -3,4 +3,5 @@ export const queryKeys = {
   blogs: "blogs",
   blogsCreate: "blogsCreate",
   blogsDelete: "blogsDelete",
+  blogCategories: "blogCategories",
 };
