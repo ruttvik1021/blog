@@ -24,13 +24,11 @@ const Login = () => {
   const { mutate: loginFn } = useMutation({
     mutationKey: [queryKeys.authUser],
     mutationFn: (form: ILogin) => loginApi(form),
-    onSuccess: (data) => {
-      login(data.data);
+    onSuccess: (data: any) => {
+      login(data.data.token);
       navigate("/");
     },
     onError: () => {
-      login("data.data");
-      navigate("/");
       toast.error("Something went wrong");
     },
   });
