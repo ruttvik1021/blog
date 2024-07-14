@@ -13,7 +13,7 @@ export interface IBlog {
   content: string;
   image: string;
   isFeatured: boolean;
-  categoryId: number;
+  categoryId: string;
   createdOn: string; // Consider using Date if you will work with Date objects
   createdBy: string | null; // If 'createdBy' can be a string or null
   modifiedOn: string; // Same as createdOn, use Date if working with Date objects
