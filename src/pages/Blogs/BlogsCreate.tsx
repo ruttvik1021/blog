@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Field, Form, FormikProvider, useFormik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import {
@@ -29,6 +29,7 @@ const BlogCreate = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { id } = useParams();
+  const [categoryToDelete, setCategoryToDelete] = useState<string>("");
 
   const { data: blogData } = useQuery({
     queryKey: [queryKeys.blogs, id],
@@ -51,32 +52,36 @@ const BlogCreate = () => {
     },
   });
 
-  const { mutate: createBlogMutation } = useMutation({
-    mutationKey: [queryKeys.blogsCreate],
-    mutationFn: (values: any) => createBlog(values),
-    onSuccess(data: any) {
-      queryClient.setQueryData([queryKeys.blogs, data.id], formik.values);
-      formik.resetForm();
-      navigate("/blogs");
-    },
-  });
+  const { mutate: createBlogMutation, isPending: isBlogCreating } = useMutation(
+    {
+      mutationKey: [queryKeys.blogsCreate],
+      mutationFn: (values: any) => createBlog(values),
+      onSuccess(data: any) {
+        queryClient.setQueryData([queryKeys.blogs, data.id], formik.values);
+        formik.resetForm();
+        navigate("/blogs");
+      },
+    }
+  );
 
-  const { mutate: createBlogCategoryMutation } = useMutation({
-    mutationKey: [queryKeys.blogsCreate],
-    mutationFn: (values: ICreateCategory) => createBlogCategory(values),
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: [queryKeys.blogCategories] });
-      categoryFormik.resetForm();
-    },
-  });
+  const { mutate: createBlogCategoryMutation, isPending: isCategoryAdding } =
+    useMutation({
+      mutationKey: [queryKeys.blogsCreate],
+      mutationFn: (values: ICreateCategory) => createBlogCategory(values),
+      onSuccess() {
+        queryClient.invalidateQueries({ queryKey: [queryKeys.blogCategories] });
+        categoryFormik.resetForm();
+      },
+    });
 
-  const { mutate: deleteBlogCategoryMutation } = useMutation({
-    mutationKey: [queryKeys.blogsCreate],
-    mutationFn: (id: string) => deleteBlogCategory(id),
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: [queryKeys.blogCategories] });
-    },
-  });
+  const { mutate: deleteBlogCategoryMutation, isPending: isCategoryDeleting } =
+    useMutation({
+      mutationKey: [queryKeys.blogsCreate],
+      mutationFn: () => deleteBlogCategory(categoryToDelete),
+      onSuccess() {
+        queryClient.invalidateQueries({ queryKey: [queryKeys.blogCategories] });
+      },
+    });
 
   const formik = useFormik({
     initialValues: {
@@ -129,25 +134,30 @@ const BlogCreate = () => {
         <Label className="text-3xl">Create Blogs</Label>
         <FormikProvider value={categoryFormik}>
           <div className="flex items-center gap-5 flex-wrap">
-            {blogCategoriesData && blogCategoriesData.data?.length ? (
-              <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {blogCategoriesData?.data?.map((item: any) => (
-                    <SelectItem value={item.id}>
-                      {item.categoryName}{" "}
-                      <Button
-                        onClick={() => deleteBlogCategoryMutation(item.id)}
-                      >
-                        X
-                      </Button>{" "}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            ) : null}
+            <div>
+              {blogCategoriesData && blogCategoriesData.data?.length ? (
+                <Select onValueChange={(value) => setCategoryToDelete(value)}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {blogCategoriesData?.data?.map((item: any) => (
+                      <SelectItem value={item.id}>
+                        {item.categoryName}{" "}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : null}
+              {categoryToDelete ? (
+                <Button
+                  onClick={() => deleteBlogCategoryMutation()}
+                  disabled={isCategoryDeleting}
+                >
+                  X
+                </Button>
+              ) : null}
+            </div>
 
             <TextField
               type={fieldTypeEnums.TEXT}
@@ -155,7 +165,11 @@ const BlogCreate = () => {
               placeholder={"New Category"}
               required
             />
-            <Button onClick={() => categoryFormik.handleSubmit()} type="submit">
+            <Button
+              onClick={() => categoryFormik.handleSubmit()}
+              type="submit"
+              disabled={isCategoryAdding}
+            >
               Add
             </Button>
           </div>
@@ -164,7 +178,7 @@ const BlogCreate = () => {
       <Separator className="my-3" />
       <div className="w-full mx-auto">
         <FormikProvider value={formik}>
-          <Form className="space-y-4">
+          <div className="space-y-4">
             <Field name={"categoryName"}>
               {({ meta }: any) => (
                 <div className="my-2">
@@ -227,10 +241,11 @@ const BlogCreate = () => {
               type="submit"
               variant="default"
               onClick={() => formik.handleSubmit()}
+              disabled={isBlogCreating}
             >
               Submit
             </Button>
-          </Form>
+          </div>
         </FormikProvider>
       </div>
     </div>

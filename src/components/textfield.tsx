@@ -4,7 +4,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 
-const textAreaMax = 255;
+const textAreaMax = 10000;
 
 interface ITextField {
   type: fieldTypeEnums;

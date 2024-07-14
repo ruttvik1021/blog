@@ -21,7 +21,7 @@ import { toast } from "sonner";
 const Login = () => {
   const { login } = useAuthContext();
   const navigate = useNavigate();
-  const { mutate: loginFn } = useMutation({
+  const { mutate: loginFn, isPending: isLogingIn } = useMutation({
     mutationKey: [queryKeys.authUser],
     mutationFn: (form: ILogin) => loginApi(form),
     onSuccess: (data: any) => {
@@ -73,7 +73,7 @@ const Login = () => {
               />
             </div>
 
-            <Button className="w-full" variant="default">
+            <Button className="w-full" variant="default" disabled={isLogingIn}>
               Login
             </Button>
           </CardContent>
