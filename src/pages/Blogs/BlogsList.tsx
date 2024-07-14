@@ -1,8 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { deleteBlog, getAllBlog, getBlogById } from "../../api/blogsApi";
+import {
+  deleteBlog,
+  getAllBlog,
+  getBlogById,
+  getBlogCategories,
+} from "../../api/blogsApi";
 import { queryKeys } from "../../utils/querykeys";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../components/ui/avatar";
+import { ICategory } from "../../utils/types";
 
 const BlogsList = () => {
   const queryClient = useQueryClient();
@@ -15,6 +26,11 @@ const BlogsList = () => {
   } = useQuery({
     queryKey: [queryKeys.blogs],
     queryFn: () => getAllBlog(),
+  });
+
+  const { data: blogCategoriesData } = useQuery({
+    queryKey: [queryKeys.blogCategories],
+    queryFn: () => getBlogCategories(),
   });
 
   const prefetch = (id: any) => {
@@ -44,9 +60,16 @@ const BlogsList = () => {
             <table className="min-w-full bg-white border border-gray-200">
               <thead className="bg-gray-100">
                 <tr>
+                  <th className="border-b border-gray-200 py-2 px-4">Image</th>
                   <th className="border-b border-gray-200 py-2 px-4">Title</th>
                   <th className="border-b border-gray-200 py-2 px-4">
                     Description
+                  </th>
+                  <th className="border-b border-gray-200 py-2 px-4">
+                    Category
+                  </th>
+                  <th className="border-b border-gray-200 py-2 px-4">
+                    Is Featured ?
                   </th>
                   <th className="border-b border-gray-200 py-2 px-4">
                     Actions
@@ -57,10 +80,26 @@ const BlogsList = () => {
                 {blogsList?.data?.map((blog: any) => (
                   <tr key={blog.id}>
                     <td className="border-b border-gray-200 py-2 px-4">
+                      <Avatar>
+                        <AvatarImage src={blog.image} />
+                        <AvatarFallback>{blog.title}</AvatarFallback>
+                      </Avatar>
+                    </td>
+                    <td className="border-b border-gray-200 py-2 px-4">
                       {blog.title}
                     </td>
                     <td className="border-b border-gray-200 py-2 px-4">
                       {blog.description}
+                    </td>
+                    <th className="border-b border-gray-200 py-2 px-4">
+                      {(blogCategoriesData &&
+                        blogCategoriesData.data.find(
+                          (cat: ICategory) => cat.id === blog.category
+                        )?.categoryName) ||
+                        ""}
+                    </th>
+                    <td className="border-b border-gray-200 py-2 px-4">
+                      {blog.isFeatured}
                     </td>
                     <td className="border-b border-gray-200 py-2 px-4">
                       <div className="flex gap-2">

@@ -1,4 +1,4 @@
-import { IBlog, ICategory } from "../utils/types";
+import { IBlog, ICreateCategory } from "../utils/types";
 import { AjaxUtils } from "./ajax";
 
 export const createBlog = (values: IBlog) => {
@@ -31,7 +31,7 @@ export const getBlogCategories = () => {
   return AjaxUtils.getAjax(url, true);
 };
 
-export const createBlogCategory = (values: ICategory) => {
+export const createBlogCategory = (values: ICreateCategory) => {
   const url = "/api/Category";
   return AjaxUtils.postAjax(url, values, true);
 };

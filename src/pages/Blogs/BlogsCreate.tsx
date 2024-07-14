@@ -22,7 +22,7 @@ import {
 } from "../../components/ui/select";
 import { Separator } from "../../components/ui/separator";
 import { queryKeys } from "../../utils/querykeys";
-import { ICategory } from "../../utils/types";
+import { ICreateCategory } from "../../utils/types";
 
 const BlogCreate = () => {
   const queryClient = useQueryClient();
@@ -62,7 +62,7 @@ const BlogCreate = () => {
 
   const { mutate: createBlogCategoryMutation } = useMutation({
     mutationKey: [queryKeys.blogsCreate],
-    mutationFn: (values: ICategory) => createBlogCategory(values),
+    mutationFn: (values: ICreateCategory) => createBlogCategory(values),
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: [queryKeys.blogCategories] });
       categoryFormik.resetForm();
@@ -125,13 +125,13 @@ const BlogCreate = () => {
         <Label className="text-3xl">Create Blogs</Label>
         <FormikProvider value={categoryFormik}>
           <div className="flex items-center gap-5 flex-wrap">
-            {blogCategoriesData && blogCategoriesData.data?.results?.length ? (
+            {blogCategoriesData && blogCategoriesData.data?.length ? (
               <Select>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {blogCategoriesData?.data?.results.map((item: any) => (
+                  {blogCategoriesData?.data?.map((item: any) => (
                     <SelectItem value={item.id}>
                       {item.categoryName} <Button>X</Button>{" "}
                     </SelectItem>
@@ -166,7 +166,7 @@ const BlogCreate = () => {
                       <SelectValue defaultValue={formik.values.categoryId} />
                     </SelectTrigger>
                     <SelectContent>
-                      {blogCategoriesData?.data?.results?.map((item: any) => (
+                      {blogCategoriesData?.data?.map((item: any) => (
                         <SelectItem value={item.id}>
                           {item.categoryName}
                         </SelectItem>
