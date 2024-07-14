@@ -13,7 +13,7 @@ const getHeaders = (auth: boolean) => {
 };
 
 const axiosInstance = axios.create({
-  baseURL: "https://1cfe-45-117-212-25.ngrok-free.app/",
+  baseURL: "https://cgkvd8cp-5100.inc1.devtunnels.ms/",
   //   baseURL: "https://localhost:3000/",
 });
 
