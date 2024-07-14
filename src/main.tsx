@@ -22,7 +22,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <AuthProvider>
         <ReactQueryDevtools initialIsOpen={true} />
         <RouterProvider router={routers} />
-        <Toaster richColors position="bottom-right" />
+        <Toaster richColors position="bottom-right" closeButton />
       </AuthProvider>
     </QueryClientProvider>
   </React.StrictMode>
