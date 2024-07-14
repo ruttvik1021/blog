@@ -35,7 +35,7 @@ const BlogsList = () => {
 
   const prefetch = (id: any) => {
     queryClient.prefetchQuery({
-      queryKey: [queryKeys.blogs, id],
+      queryKey: [queryKeys.blogs, String(id)],
       queryFn: () => getBlogById(id),
       staleTime: 20000,
     });

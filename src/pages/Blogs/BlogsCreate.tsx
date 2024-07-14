@@ -80,6 +80,7 @@ const BlogCreate = () => {
       mutationFn: () => deleteBlogCategory(categoryToDelete),
       onSuccess() {
         queryClient.invalidateQueries({ queryKey: [queryKeys.blogCategories] });
+        setCategoryToDelete("");
       },
     });
 
@@ -134,9 +135,12 @@ const BlogCreate = () => {
         <Label className="text-3xl">Create Blogs</Label>
         <FormikProvider value={categoryFormik}>
           <div className="flex items-center gap-5 flex-wrap">
-            <div>
+            <div className="flex gap-3">
               {blogCategoriesData && blogCategoriesData.data?.length ? (
-                <Select onValueChange={(value) => setCategoryToDelete(value)}>
+                <Select
+                  onValueChange={(value) => setCategoryToDelete(value)}
+                  value={categoryToDelete}
+                >
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
@@ -151,6 +155,7 @@ const BlogCreate = () => {
               ) : null}
               {categoryToDelete ? (
                 <Button
+                  variant="destructive"
                   onClick={() => deleteBlogCategoryMutation()}
                   disabled={isCategoryDeleting}
                 >
