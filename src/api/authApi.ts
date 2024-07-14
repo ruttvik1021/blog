@@ -8,7 +8,7 @@ export const loginApi = (values: ILogin) => {
     url,
     {
       email: "string",
-      password: "wBtpVK$Imx",
+      password: "0D3HDg2KtH",
     },
     false
   );

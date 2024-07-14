@@ -91,15 +91,15 @@ const BlogsList = () => {
                     <td className="border-b border-gray-200 py-2 px-4">
                       {blog.description}
                     </td>
-                    <th className="border-b border-gray-200 py-2 px-4">
+                    <td className="border-b border-gray-200 py-2 px-4">
                       {(blogCategoriesData &&
                         blogCategoriesData.data.find(
-                          (cat: ICategory) => cat.id === blog.category
+                          (cat: ICategory) => cat.id === blog.categoryId
                         )?.categoryName) ||
                         ""}
-                    </th>
+                    </td>
                     <td className="border-b border-gray-200 py-2 px-4">
-                      {blog.isFeatured}
+                      {blog.isFeatured ? "True" : "False"}
                     </td>
                     <td className="border-b border-gray-200 py-2 px-4">
                       <div className="flex gap-2">

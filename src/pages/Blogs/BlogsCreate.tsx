@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import {
   createBlog,
   createBlogCategory,
+  deleteBlogCategory,
   getBlogById,
   getBlogCategories,
   updateBlog,
@@ -67,7 +68,12 @@ const BlogCreate = () => {
       queryClient.invalidateQueries({ queryKey: [queryKeys.blogCategories] });
       categoryFormik.resetForm();
     },
-    onError() {
+  });
+
+  const { mutate: deleteBlogCategoryMutation } = useMutation({
+    mutationKey: [queryKeys.blogsCreate],
+    mutationFn: (id: string) => deleteBlogCategory(id),
+    onSuccess() {
       queryClient.invalidateQueries({ queryKey: [queryKeys.blogCategories] });
     },
   });
@@ -79,16 +85,14 @@ const BlogCreate = () => {
       content: "",
       image: "",
       isFeatured: false,
-      categoryId: 1,
+      categoryId: "",
     },
     validationSchema: Yup.object({
       description: Yup.string().required("Description is required"),
       title: Yup.string().required("Title is required"),
       content: Yup.string().required("Content is required"),
       image: Yup.string().required("Image URL is required"),
-      categoryId: Yup.number()
-        .required("Category ID is required")
-        .min(1, "Category ID must be greater than 0"),
+      categoryId: Yup.string().required("Category ID is required"),
     }),
     onSubmit: (values) => {
       if (id) {
@@ -112,7 +116,7 @@ const BlogCreate = () => {
   });
 
   useEffect(() => {
-    if (blogData?.data?.length) {
+    if (blogData?.data) {
       const blogDetails = blogData.data;
       delete blogDetails.id;
       formik.setValues(blogDetails);
@@ -133,7 +137,12 @@ const BlogCreate = () => {
                 <SelectContent>
                   {blogCategoriesData?.data?.map((item: any) => (
                     <SelectItem value={item.id}>
-                      {item.categoryName} <Button>X</Button>{" "}
+                      {item.categoryName}{" "}
+                      <Button
+                        onClick={() => deleteBlogCategoryMutation(item.id)}
+                      >
+                        X
+                      </Button>{" "}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -161,13 +170,18 @@ const BlogCreate = () => {
                 <div className="my-2">
                   <Label htmlFor="category">Category</Label>
                   <span className="text-red-600 ml-1">*</span>
-                  <Select value={String(formik.values.categoryId)}>
+                  <Select
+                    onValueChange={(value) =>
+                      formik.setFieldValue("categoryId", value)
+                    }
+                    defaultValue={formik.values.categoryId}
+                  >
                     <SelectTrigger className="w-[180px]">
-                      <SelectValue defaultValue={formik.values.categoryId} />
+                      <SelectValue placeholder="Category" />
                     </SelectTrigger>
                     <SelectContent>
                       {blogCategoriesData?.data?.map((item: any) => (
-                        <SelectItem value={item.id} onClick={() => formik.setFieldValue(“categoryId”, item.id)}>
+                        <SelectItem value={item.id}>
                           {item.categoryName}
                         </SelectItem>
                       ))}

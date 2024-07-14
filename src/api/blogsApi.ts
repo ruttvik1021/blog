@@ -35,3 +35,8 @@ export const createBlogCategory = (values: ICreateCategory) => {
   const url = "/api/Category";
   return AjaxUtils.postAjax(url, values, true);
 };
+
+export const deleteBlogCategory = (id: string) => {
+  const url = "/api/Category/" + id;
+  return AjaxUtils.deleteAjax(url, true);
+};
