@@ -167,7 +167,7 @@ const BlogCreate = () => {
                     </SelectTrigger>
                     <SelectContent>
                       {blogCategoriesData?.data?.map((item: any) => (
-                        <SelectItem value={item.id}>
+                        <SelectItem value={item.id} onClick={() => formik.setFieldValue(“categoryId”, item.id)}>
                           {item.categoryName}
                         </SelectItem>
                       ))}
