@@ -14,6 +14,14 @@ import {
   AvatarImage,
 } from "../../components/ui/avatar";
 import { ICategory } from "../../utils/types";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "../../components/ui/card";
 
 const BlogsList = () => {
   const queryClient = useQueryClient();
@@ -56,80 +64,59 @@ const BlogsList = () => {
     <>
       {blogsList && blogsList.data && blogsList?.data.length ? (
         <>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="border-b border-gray-200 py-2 px-4">Image</th>
-                  <th className="border-b border-gray-200 py-2 px-4">Title</th>
-                  <th className="border-b border-gray-200 py-2 px-4">
-                    Description
-                  </th>
-                  <th className="border-b border-gray-200 py-2 px-4">
-                    Category
-                  </th>
-                  <th className="border-b border-gray-200 py-2 px-4">
-                    Is Featured ?
-                  </th>
-                  <th className="border-b border-gray-200 py-2 px-4">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {blogsList?.data?.map((blog: any) => (
-                  <tr key={blog.id}>
-                    <td className="border-b border-gray-200 py-2 px-4">
-                      <Avatar>
-                        <AvatarImage src={blog.image} />
-                        <AvatarFallback>{blog.title}</AvatarFallback>
-                      </Avatar>
-                    </td>
-                    <td className="border-b border-gray-200 py-2 px-4">
-                      {blog.title}
-                    </td>
-                    <td className="border-b border-gray-200 py-2 px-4">
-                      {blog.description}
-                    </td>
-                    <td className="border-b border-gray-200 py-2 px-4">
-                      {(blogCategoriesData &&
-                        blogCategoriesData.data.find(
-                          (cat: ICategory) => cat.id === blog.categoryId
-                        )?.categoryName) ||
-                        ""}
-                    </td>
-                    <td className="border-b border-gray-200 py-2 px-4">
-                      {blog.isFeatured ? "True" : "False"}
-                    </td>
-                    <td className="border-b border-gray-200 py-2 px-4">
-                      <div className="flex gap-2">
-                        <button
-                          onMouseEnter={() => prefetch(blog.id)}
-                          onFocus={() => prefetch(blog.id)}
-                          onClick={() => navigate(`/blogs/${blog.id}`)}
-                          className="text-blue-600 hover:text-blue-900"
-                        >
-                          <EyeIcon className="h-5 w-5" />
-                        </button>
-                        <button
-                          disabled
-                          onClick={() => navigate(`/blogs/${blog.id}`)}
-                          className="text-yellow-600 hover:text-yellow-900"
-                        >
-                          <PencilIcon className="h-5 w-5" />
-                        </button>
-                        <button
-                          onClick={() => deleteBlogById(blog.id)}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          <TrashIcon className="h-5 w-5" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {blogsList?.data?.map((blog: any) => (
+              <Card key={blog.id} className="border border-gray-200 shadow-md">
+                <CardHeader className="flex-row justify-between p-5 items-center">
+                  <Avatar className="w-16 h-16">
+                    <AvatarImage src={blog.image} />
+                    <AvatarFallback>{blog.title}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex gap-3">
+                    <button
+                      onMouseEnter={() => prefetch(blog.id)}
+                      onFocus={() => prefetch(blog.id)}
+                      onClick={() => navigate(`/blogs/${blog.id}`)}
+                      className="text-blue-600 hover:text-blue-900"
+                    >
+                      <EyeIcon className="h-5 w-5" />
+                    </button>
+                    <button
+                      disabled
+                      onClick={() => navigate(`/blogs/${blog.id}`)}
+                      className="text-yellow-600 hover:text-yellow-900"
+                    >
+                      <PencilIcon className="h-5 w-5" />
+                    </button>
+                    <button
+                      onClick={() => deleteBlogById(blog.id)}
+                      className="text-red-600 hover:text-red-900"
+                    >
+                      <TrashIcon className="h-5 w-5" />
+                    </button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardTitle>{blog.title}</CardTitle>
+                  <CardDescription className="mt-3">
+                    {blog.description}
+                  </CardDescription>
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                  <div className="text-gray-500">
+                    Category:{" "}
+                    {(blogCategoriesData &&
+                      blogCategoriesData.data.find(
+                        (cat: ICategory) => cat.id === blog.categoryId
+                      )?.categoryName) ||
+                      ""}
+                  </div>
+                  <div className="text-gray-500">
+                    Featured: {blog.isFeatured ? "Yes" : "No"}
+                  </div>
+                </CardFooter>
+              </Card>
+            ))}
           </div>
         </>
       ) : (
