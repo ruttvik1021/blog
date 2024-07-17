@@ -15,6 +15,6 @@ export const loginApi = (values: ILogin) => {
 };
 
 export const signUpApi = (values: ILogin) => {
-  const url = "/signup";
+  const url = "/User";
   return AjaxUtils.postAjax(url, values, false);
 };
