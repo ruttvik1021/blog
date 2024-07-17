@@ -27,16 +27,16 @@ export const getBlogById = (id: string) => {
 };
 
 export const getBlogCategories = () => {
-  const url = `/api/Category`;
+  const url = `/Category`;
   return AjaxUtils.getAjax(url, true);
 };
 
 export const createBlogCategory = (values: ICreateCategory) => {
-  const url = "/api/Category";
+  const url = "/Category";
   return AjaxUtils.postAjax(url, values, true);
 };
 
 export const deleteBlogCategory = (id: string) => {
-  const url = "/api/Category/" + id;
+  const url = "/Category/" + id;
   return AjaxUtils.deleteAjax(url, true);
 };
