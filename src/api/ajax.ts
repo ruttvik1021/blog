@@ -13,7 +13,7 @@ const getHeaders = (auth: boolean) => {
 };
 
 const axiosInstance = axios.create({
-  baseURL: "https://cgkvd8cp-5100.inc1.devtunnels.ms/",
+  baseURL: "https://cgkvd8cp-5100.inc1.devtunnels.ms/api",
   //   baseURL: "https://localhost:3000/",
 });
 
