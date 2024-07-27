@@ -25,16 +25,12 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response) {
       const { status } = error.response;
-      if (status === 401) {
-        // Handle 401 errors (e.g., redirect to login)
+      if (status === 401 || status === 403) {
+        // Handle 401 & 403 errors (e.g., redirect to login)
         console.error("Unauthorized, logging out...");
         // Perform logout operation here, like clearing local storage and redirecting to login
         localStorage.removeItem("token"); // Clear the token
         window.location.href = "/auth/login"; // Redirect to login page
-      } else if (status === 403) {
-        // Handle 403 errors (e.g., show a forbidden message)
-        console.error("Forbidden, you do not have access.");
-        alert("You do not have access to this resource.");
       }
     }
     return Promise.reject(error);
