@@ -2,8 +2,8 @@ import axios, { AxiosHeaders } from "axios";
 
 const getHeaders = (auth: boolean) => {
   const headers = new AxiosHeaders();
-  const token = localStorage.getItem("token");
   if (auth) {
+    const token = localStorage.getItem("token");
     return {
       ...headers,
       Authorization: `Bearer ${token}`,
